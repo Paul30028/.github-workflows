@@ -1,0 +1,16 @@
+name: Auto-Updater
+on:
+  schedule:
+    - cron: '0 0 * * *' # 每天午夜运行
+jobs:
+  run-scraper:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run WebPulse & Conductor
+        run: |
+          python web_pulse.py  # 采集数据
+          python ai_conductor.py # 处理数据
+          python update_notion.py # 推送到 Notion
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
